@@ -16,7 +16,8 @@ const preguntaSchema = new mongoose.Schema({
     required: true // Define si es una pregunta con una o varias respuestas correctas
   },
   alternativas: [alternativaSchema], // Array de alternativas
-  respuestas_correctas: [{ type: String, required: true }] // IDs de las alternativas correctas
+  respuestas_correctas: [{ type: String, required: true }], // IDs de las alternativas correctas
+  imagenes: [{ type: String, required: false }], // Array de URLs o IDs de imágenes relacionadas con la pregunta
 });
 
 const Pregunta = mongoose.model("Pregunta", preguntaSchema);

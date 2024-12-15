@@ -1,12 +1,26 @@
 import express from 'express';
-import { getPreguntas, createPregunta, getPreguntaById, deletePregunta, getTestPreguntas, putCorrecion } from '../controllers/questionController.js';
-import validatePregunta from '../middlewares/validateQuestion.js'; 
+import {
+  getPreguntas,
+  createPregunta,
+  getPreguntaById,
+  deletePregunta,
+  getTestPreguntas,
+  iniciarTest,
+  validarTest
+} from '../controllers/questionController.js';
+import validatePregunta from '../middlewares/validateQuestion.js';
+
 const router = express.Router();
 
+// Rutas para CRUD de preguntas
 router.get('/', getPreguntas); // Obtener todas las preguntas
-router.get('/test',getTestPreguntas); // Obtener preguntas para un test
+router.get('/test', getTestPreguntas); // Obtener preguntas para un test
 router.post('/', validatePregunta, createPregunta); // Crear una nueva pregunta
 router.get('/:id', getPreguntaById); // Obtener pregunta por ID
 router.delete('/:id', deletePregunta); // Eliminar una pregunta por ID
-router.patch('/:idPregunta/alternativas/:idAlternativa/correcion', putCorrecion); // Agregar corrección a una pregunta
+
+// Rutas para manejo de tests
+router.get('/test/iniciar', iniciarTest); // Generar un test aleatorio
+router.post('/test/validar', validarTest); // Validar respuestas de un test
+
 export default router;
