@@ -6,6 +6,7 @@ import connectDB from './config/db.js'; // importa la conexión a la base de dat
 import preguntasRoutes from './routes/questionRoutes.js'; // importa las rutas de preguntas
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import cors from 'cors'; // Importa cors
 
 
 const app = express(); // crea una instancia con la conexión express
@@ -13,6 +14,14 @@ dotenv.config(); // ejecuta dotenv
 connectDB(); // ejecuta la conexión a la base de datos
 
 console.log(process.env.MONGO_URI);
+
+
+// Middleware para habilitar CORS
+app.use(cors({
+  origin: "http://localhost:5173", // Cambia esto al origen de tu frontend
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
 // Middleware para sesiones
 app.use(

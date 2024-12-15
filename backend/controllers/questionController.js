@@ -128,3 +128,44 @@ export const putCorrecion = async (req, res) => {
     res.status(500).json({ message: "Error al actualizar la corrección.", error: error.message });
   }
 };
+
+// Validar respuestas del usuario
+export const ValidateAnswers = async (req, res) => {
+  const { respuestasUsuario } = req.body; // [{ idPregunta, respuestaSeleccionada }, ...]
+
+  try {
+    let respuestasIncorrectas = 0;
+
+    for (const respuesta of respuestasUsuario) {
+      const { idPregunta, respuestaSeleccionada } = respuesta;
+
+      // Validar el formato del ID
+      if (!mongoose.Types.ObjectId.isValid(idPregunta)) {
+        return res.status(400).json({ message: "ID de pregunta inválido." });
+      }
+
+      // Obtener la pregunta de la base de datos
+      const pregunta = await Pregunta.findById(idPregunta);
+
+      if (!pregunta) {
+        return res.status(404).json({ message: `Pregunta con ID ${idPregunta} no encontrada.` });
+      }
+
+      // Verificar si la respuesta es correcta
+      const esCorrecta = pregunta.respuestas_correctas.includes(respuestaSeleccionada);
+
+      if (!esCorrecta) {
+        respuestasIncorrectas++;
+      }
+    }
+
+    res.status(200).json({
+      message: "Evaluación completada.",
+      totalPreguntas: respuestasUsuario.length,
+      respuestasIncorrectas,
+      respuestasCorrectas: respuestasUsuario.length - respuestasIncorrectas,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error al validar las respuestas.", error: error.message });
+  }
+};
