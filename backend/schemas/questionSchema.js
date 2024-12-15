@@ -17,10 +17,14 @@ const validationPreguntaSchema = z.object({
   respuestas_correctas: z
     .array(z.string())
     .min(1, "Debe haber al menos una respuesta correcta."),
-    imagenes: z
-    .array(z.string().regex(/^static\/images\/.*/, "La ruta de la imagen debe ser válida en el servidor."))
+  imagenes: z
+    .array(
+      z.string().regex(
+        /^(?:[a-zA-Z]:\\|\/)?(?:[\w-]+\/)*[\w-]+\.(?:png|jpg|jpeg|gif)$/,
+        "La ruta de la imagen debe ser válida en el servidor."
+      )
+    )
     .optional(),
-  
 });
 
 

@@ -20,7 +20,7 @@ router.get('/:id', getPreguntaById); // Obtener pregunta por ID
 router.delete('/:id', deletePregunta); // Eliminar una pregunta por ID
 
 // Rutas para manejo de tests
-router.get('/test/iniciar', iniciarTest); // Generar un test aleatorio
-router.post('/test/validar', validarTest); // Validar respuestas de un test
+router.get('/tests/iniciar', iniciarTest); // Generar un test aleatorio
+router.post('/tests/validar', validarTest); // Validar respuestas de un test
 
 export default router;

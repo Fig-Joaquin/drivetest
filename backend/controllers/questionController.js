@@ -1,5 +1,7 @@
 import Pregunta from "../models/Question.js";
 import mongoose from "mongoose";
+import { z } from "zod"; 
+import validationPreguntaSchema from "../schemas/questionSchema.js";
 
 // * Obtener todas las preguntas
 export const getPreguntas = async (req, res) => {
@@ -126,7 +128,14 @@ export const iniciarTest = async (req, res) => {
     
     const preguntas = await Pregunta.aggregate([
       { $sample: { size: 35 } },
-      { $project: { texto: 1, tipo_pregunta: 1, alternativas: 1 } } // Excluye respuestas correctas
+      { $project: {
+        texto: 1, 
+        tipo_pregunta: 1, 
+        alternativas: 1, 
+        imagenes: 1, 
+        respuestas_correctas: 1, 
+        correcion: 1
+      } }
     ]);
 
 

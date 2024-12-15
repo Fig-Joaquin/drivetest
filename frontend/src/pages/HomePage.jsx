@@ -13,12 +13,13 @@ export const HomePage = () => {
     <div className="min-h-screen flex flex-col">
       {/* Barra de Navegación */}
       <nav className="bg-purple-50 p-4 flex justify-between items-center">
-    
-        <div className="text-2xl font-extrabold bg-purple-50 animate-pulse text-purple-800 uppercase">Test para la conducción</div>
+        <div className="text-2xl font-extrabold bg-purple-50 animate-pulse text-purple-800 uppercase">
+          Test teoríco para la licencia de conducir
+        </div>
+
         <button className="bg-purple-800 text-white font-medium py-2  px-4 rounded-lg hover:bg-purple-600 transition duration-200">
           Iniciar Sesión
         </button>
-
       </nav>
 
       {/* Banner Principal */}
