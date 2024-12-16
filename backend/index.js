@@ -20,10 +20,11 @@ console.log(process.env.MONGO_URI);
 
 // Middleware para habilitar CORS
 app.use(cors({
-  origin: `${process.env.WEB_URL}:5173`, // Cambia esto al origen de tu frontend
+  origin:  `http://${process.env.WEB_URL}:5173 ` , // Cambia esto al origen de tu frontend
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
+
 
 // Middleware para sesiones
 app.use(
@@ -67,6 +68,7 @@ app.use(express.json());
 
 // Cambia `localhost` por `0.0.0.0` o la IP local
 const PORT = 4000; // Cambia al puerto que usas
-app.listen(PORT, process.env.WEB_URL, () => {
-  console.log(`Servidor corriendo en http://192.168.x.x:${PORT}`);
+app.listen(PORT, `${process.env.WEB_URL}`, () => {
+  // console.log(`Servidor corriendo en http://192.168.x.x:${PORT}`);
+  console.log(`Servidor corriendo en ${process.env.WEB_URL}:${PORT}`);
 });

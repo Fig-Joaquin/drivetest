@@ -6,7 +6,9 @@ import {
   deletePregunta,
   getTestPreguntas,
   iniciarTest,
-  validarTest
+  validarTest,
+  getPreguntasSinCorreccion,
+  updateCorreccionAlternativa,
 } from '../controllers/questionController.js';
 import validatePregunta from '../middlewares/validateQuestion.js';
 
@@ -18,6 +20,9 @@ router.get('/test', getTestPreguntas); // Obtener preguntas para un test
 router.post('/', validatePregunta, createPregunta); // Crear una nueva pregunta
 router.get('/:id', getPreguntaById); // Obtener pregunta por ID
 router.delete('/:id', deletePregunta); // Eliminar una pregunta por ID
+router.get('/obtener/correcion', getPreguntasSinCorreccion); // Obtener preguntas sin corrección
+router.patch('/actualizar/correcion', updateCorreccionAlternativa); // Actualizar corrección de una pregunta
+
 
 // Rutas para manejo de tests
 router.get('/tests/iniciar', iniciarTest); // Generar un test aleatorio

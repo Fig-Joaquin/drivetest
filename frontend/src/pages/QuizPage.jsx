@@ -1,41 +1,23 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useFetchQuestions } from "../hooks/useFetchQuestions";
+import { Results } from "../components/Results";
+import { HeaderQuiz } from "../components/HeaderQuiz";
 
 export const QuizPage = () => {
-  const [preguntas, setPreguntas] = useState([]);
+  const { preguntas, loading, error } = useFetchQuestions("http://192.168.1.115:4000/api/tests/iniciar");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [score, setScore] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [showResults, setShowResults] = useState(false);
   const [detallesRespuestas, setDetallesRespuestas] = useState([]);
+  const [paginaActual, setPaginaActual] = useState(0);
+  
 
-  const navigate = useNavigate();
 
-  const handleStartQuiz = () => {
-    navigate('/');
-  };
 
-  useEffect(() => {
-    const fetchPreguntas = async () => {
-      try {
-        const response = await axios.get("http://192.168.1.115:4000/api/tests/iniciar");
-        setPreguntas(response.data.preguntas || []); // Asegurar que preguntas sea un array
-        setLoading(false);
-        
-      } catch (error) {
-        console.error("Error al cargar las preguntas:", error);
-      }
-    };
-
-    fetchPreguntas();
-  }, []);
 
   const handleAnswer = (id) => {
     const preguntaActual = preguntas[currentQuestion];
-
-
     if (preguntaActual.tipo_pregunta === "única") {
       setSelectedAnswers([id]); // Solo se puede seleccionar una respuesta
     } else if (preguntaActual.tipo_pregunta === "múltiple") {
@@ -98,52 +80,14 @@ export const QuizPage = () => {
 
   if (showResults) {
     return (
-      <div className="min-h-screen flex flex-col items-center bg-purple-50">
-        <div className="max-w-3xl w-full p-6 bg-white shadow-lg rounded-lg mt-10">
-          <h2 className="text-2xl font-bold mb-4">Resultados del Test</h2>
-          <p className="text-lg">Tu puntuación es: <strong>{score}/{preguntas.length}</strong></p>
-  
-          <div className="mt-6">
-            <h3 className="text-xl font-semibold mb-2">Respuestas Incorrectas:</h3>
-            {detallesRespuestas
-              .filter((detalle) => !detalle.esCorrecta)
-              .map((detalle, index) => (
-                <div
-                  key={index}
-                  className="p-4 mb-4 bg-red-100 rounded-lg shadow-md"
-                >
-                  <h4 className="font-bold mb-2">{detalle.pregunta}</h4>
-  
-                  <ul>
-                    {detalle.alternativas.map((alt) => (
-                      <li
-                        key={alt.id}
-                        className={`${
-                          detalle.respuestasCorrectas.includes(alt.id) ? 'font-bold text-green-600' : ''
-                        } ${detalle.respuestasSeleccionadas.includes(alt.id) ? 'underline' : ''}`}
-                      >
-                        {alt.texto}
-                      </li>
-                    ))}
-                  </ul>
-  
-                  {detalle.correccion && (
-                    <p className="mt-2 text-sm text-gray-700">
-                      <strong>Corrección:</strong> {detalle.correccion}
-                    </p>
-                  )}
-                </div>
-              ))}
-          </div>
-  
-          <button
-            onClick={handleStartQuiz}
-            className="bg-purple-800 text-white px-4 py-2 rounded-lg hover:bg-purple-600 mt-6"
-          >
-            Volver al inicio
-          </button>
-        </div>
-      </div>
+      <Results
+        showResults={showResults}
+        score={score}
+        totalQuestions={preguntas.length}
+        detallesRespuestas={detallesRespuestas}
+        paginaActual={paginaActual}
+        setPaginaActual={setPaginaActual}
+      />
     );
   }
 
@@ -151,9 +95,23 @@ export const QuizPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-purple-50">
-      <div className="max-w-2xl w-full p-6 bg-white shadow-lg rounded-lg mt-10">
-        <h2 className="text-xl font-bold mb-4">{preguntaActual.texto}</h2>
+      
+      {/* // Header del Quiz */}
+      <HeaderQuiz 
+        showLoginButton={true} 
+        showHomeButton = {true} 
+      />
 
+      <div className="text-center flex flex-col items-center"> 
+        
+        <h1 className="text-6xl font-bold mt-20 mb-4"><span className="font-extrabold  text-justify  text-black text-3xl"></span> </h1>
+        <p className="text-xl font-semibold">¡Sigue las intrucciones!</p>
+      </div>
+
+      <div className="max-w-2xl w-full p-6 bg-white shadow-lg rounded-lg mt-10">
+          <div className="text-lg text-center  font-medium"> Pregunta {currentQuestion+1} </div>
+        <h2 className="text-lg font-bold mb-4 mt-3">{preguntaActual.texto}</h2>
+        
         <p className="mb-4 text-gray-700 italic">
           {preguntaActual.tipo_pregunta === "única"
             ? "Pregunta de respuesta única"
@@ -163,7 +121,7 @@ export const QuizPage = () => {
         {preguntaActual.imagenes && preguntaActual.imagenes.length > 0 && (
           <div className="flex flex-col items-center mb-4">
             <img
-              src={`http://192.168.1.115/images/${preguntaActual.imagenes[0]}`}
+              src={`http://192.168.1.115:4000/images/${preguntaActual.imagenes[0]}`}
               alt="Pregunta visual"
               className="max-w-full rounded-lg"
             />
@@ -177,19 +135,20 @@ export const QuizPage = () => {
               onClick={() => handleAnswer(alternativa.id)}
               className={`py-2 px-4 rounded-lg text-left border ${
                 selectedAnswers.includes(alternativa.id)
-                  ? "bg-purple-500 text-white"
-                  : "bg-purple-100 hover:bg-purple-200"
+                  ? "bg-violet-600 text-white"
+                  : "bg-violet-50 hover:bg-violet-100"
               }`}
             >
-              {alternativa.texto}
+              <span> {alternativa.id.toUpperCase()}) </span> 
+              <span> {alternativa.texto} </span>
             </button>
           ))}
         </div>
 
-        <div className="mt-6 flex justify-between">
+        <div className="flex mt-4 justify-end">
           <button
             onClick={handleNext}
-            className="bg-purple-800 text-white px-4 py-2 rounded-lg hover:bg-purple-600"
+            className="text-violet-800 px-4 py-2 rounded-lg hover:text-violet-200"
           >
             {currentQuestion < preguntas.length - 1 ? "Siguiente" : "Finalizar"}
           </button>

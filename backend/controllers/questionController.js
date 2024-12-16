@@ -205,3 +205,40 @@ export const validarTest = async (req, res) => {
     res.status(500).json({ message: "Error al validar el test.", error: error.message });
   }
 };
+
+// * Obtener las preguntas que no llevan alguna correcion en sus alternativas 
+export const getPreguntasSinCorreccion = async (req, res) => {
+  try {
+    const preguntasSinCorreccion = await Pregunta.find({
+      "alternativas.correccion": { $exists: false }
+    });
+    res.status(200).json(preguntasSinCorreccion);
+  } catch (error) {
+    res.status(500).json({ message: "Error al buscar preguntas sin corrección.", error: error.message });
+  }
+};
+
+// * Actualizar la corrección de una alternativa 
+export const updateCorreccionAlternativa = async (req, res) => {
+  const { idPregunta, idAlternativa, correccion } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(idPregunta)) {
+    return res.status(400).json({ message: "ID de pregunta inválido." });
+  }
+
+  try {
+    const pregunta = await Pregunta.findOneAndUpdate(
+      { _id: idPregunta, "alternativas.id": idAlternativa },
+      { $set: { "alternativas.$.correccion": correccion } },
+      { new: true, runValidators: true }
+    );
+
+    if (!pregunta) {
+      return res.status(404).json({ message: "Pregunta o alternativa no encontrada." });
+    }
+
+    res.status(200).json({ message: "Corrección actualizada exitosamente.", pregunta });
+  } catch (error) {
+    res.status(500).json({ message: "Error al actualizar la corrección.", error: error.message });
+  }
+};
