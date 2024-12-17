@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export const CustomButton = ({ onClick, text, type = "button", variant = "primary", disabled = false }) => {
+export const CustomButton = ({ classSpan, classNameChildren, onClick, text, type = "button", variant = "primary", disabled = false }) => {
   const baseStyles =
     "px-4 py-2 rounded text-white font-semibold transition focus:outline-none focus:ring";
   const variants = {
@@ -13,11 +13,11 @@ export const CustomButton = ({ onClick, text, type = "button", variant = "primar
   return (
     <button
       type={type}
-      className={`${baseStyles} ${variants[variant]} ${disabled ? "opacity-50 cursor-not-allowed" : ""}`}
+      className={`${classNameChildren}`}
       onClick={onClick}
       disabled={disabled}
     >
-      {text}
+      <span className={`${classSpan}`}> {text} </span>
     </button>
   );
 };
@@ -28,4 +28,5 @@ CustomButton.propTypes = {
   type: PropTypes.oneOf(["button", "submit", "reset"]),
   variant: PropTypes.oneOf(["primary", "secondary", "danger"]),
   disabled: PropTypes.bool,
+  classSpan: PropTypes.string,
 };

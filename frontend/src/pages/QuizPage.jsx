@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { useFetchQuestions } from "../hooks/useFetchQuestions";
-import { Results } from "../components/Results";
+import { Results } from "./Results";
 import { HeaderQuiz } from "../components/HeaderQuiz";
+import { MobileNav } from "../components/NavBar";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const QuizPage = () => {
-  const { preguntas, loading, error } = useFetchQuestions("http://192.168.1.115:4000/api/tests/iniciar");
+
+
+  const { preguntas, loading, error } = useFetchQuestions(`${API_URL}/api/tests/iniciar`);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [score, setScore] = useState(0);
@@ -94,51 +99,66 @@ export const QuizPage = () => {
   const preguntaActual = preguntas[currentQuestion];
 
   return (
-    <div className="min-h-screen flex flex-col items-center bg-purple-50">
-      
+    <div className="min-h-screen flex flex-col lg:items-center bg-purple-50">
+      {/* Barra de Navegación para Móviles */}
+      <div className="block lg:hidden">
+        <MobileNav />
+      </div>
+
       {/* // Header del Quiz */}
-      <HeaderQuiz 
-        showLoginButton={true} 
-        showHomeButton = {true} 
-      />
+      <div className="hidden lg:block">
+        <HeaderQuiz 
+          navClass={"text-2xl fixed top-0 z-50 left-0 font-extrabold text-center bg-violet text-purple-900 uppercase p-3 flex justify-between items-center w-full"}
+          // Boton 1
+          showHomeButton = {true} 
+          classNameChildrenButton = {"hidden sm:block group text-violet-900  font-medium py-2 px-4 rounded-lg transition duration-200 text-sm sm:text-base sm:py-2 md:py-2 md:px-4"}
+          handleLinkChildrenButton = {"/"}
+          // Boton 2
+          showLoginButton = {true} 
+          classNameChildrenButton2 = {
+            "hidden sm:block group font-medium py-2 px-4 text-violet-900 rounded-lg transition duration-200 text-sm sm:text-base sm:py-2 md:py-2 md:px-4"
+          }
+          handleLinkChildrenButton2={"/login"}
+          />
+      </div>
 
       <div className="text-center flex flex-col items-center"> 
         
-        <h1 className="text-6xl font-bold mt-20 mb-4"><span className="font-extrabold  text-justify  text-black text-3xl"></span> </h1>
-        <p className="text-xl font-semibold">¡Sigue las intrucciones!</p>
+        <h1 className="text-6xl font-bold lg:mt-24 mb-4"><span className="font-extrabold  text-justify  text-black text-3xl"></span> </h1>
+        <p className="text-xl font-bold">¡Sigue las intrucciones!</p>
       </div>
 
       <div className="max-w-2xl w-full p-6 bg-white shadow-lg rounded-lg mt-10">
           <div className="text-lg text-center  font-medium"> Pregunta {currentQuestion+1} </div>
         <h2 className="text-xl text-justify font-bold mb-4 mt-3">{preguntaActual.texto}</h2>
         
-        <p className="mb-4 text-gray-700 italic">
+        <p className="mb-4 text-gray-500 italic underline ">
           {preguntaActual.tipo_pregunta === "única"
             ? "Pregunta de respuesta única"
-            : "Pregunta de respuesta múltiple (selecciona todas las correctas)"}
+            : "Pregunta de respuesta múltiple (seleccionar todas las correctas)"}
         </p>
 
         {preguntaActual.imagenes && preguntaActual.imagenes.length > 0 && (
           <div className="flex flex-col items-center mb-4">
             <img
-              src={`http://192.168.1.115:4000/images/${preguntaActual.imagenes[0]}`}
+              src={`${API_URL}/images/${preguntaActual.imagenes[0]}`}
               alt="Pregunta visual"
               className="max-w-full rounded-lg"
-            />
+              />
           </div>
         )}
 
         <div className="flex flex-col space-y-3">
           {preguntaActual.alternativas.map((alternativa) => (
             <button
-              key={alternativa.id}
-              onClick={() => handleAnswer(alternativa.id)}
-              className={`py-2 px-4 rounded-lg text-left border ${
-                selectedAnswers.includes(alternativa.id)
-                  ? "bg-violet-600 text-white"
-                  : "bg-violet-50 hover:bg-violet-100"
+            key={alternativa.id}
+            onClick={() => handleAnswer(alternativa.id)}
+            className={`py-2 px-4 rounded-lg text-left border ${
+              selectedAnswers.includes(alternativa.id)
+              ? "bg-violet-500 text-white"
+              : "bg-violet-50 hover:bg-violet-200"
               }`}
-            >
+              >
               <span> {alternativa.id.toUpperCase()}) </span> 
               <span> {alternativa.texto} </span>
             </button>
@@ -148,7 +168,7 @@ export const QuizPage = () => {
         <div className="flex mt-4 justify-end">
           <button
             onClick={handleNext}
-            className="text-violet-800 px-4 py-2 rounded-lg hover:text-violet-200"
+            className="text-violet-900 px-4 py-2 rounded-lg hover:text-purple-600"
           >
             {currentQuestion < preguntas.length - 1 ? "Siguiente" : "Finalizar"}
           </button>

@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, loginUser, changePassword, logoutUser } from "../controllers/userController.js";
+import { registerUser, loginUser, changePassword, logoutUser, getUserProfile, updateUserProfile } from "../controllers/userController.js";
 import { validateSchema } from "../middlewares/validateUser.js";
 import { registerUserSchema } from "../schemas/userSchema.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
@@ -13,9 +13,7 @@ router.post("/register", validateSchema(registerUserSchema), registerUser);
 router.post("/login", loginUser);
 
 // Perfil del usuario
-router.get("/perfil", authMiddleware, (req, res) => {
-  res.status(200).json({ message: "Acceso autorizado", user: req.user });
-});
+router.get("/perfil", authMiddleware, getUserProfile);
 
 // Cambio de contraseña del usario
 router.patch("/change-password", authMiddleware, changePassword);
@@ -23,5 +21,7 @@ router.patch("/change-password", authMiddleware, changePassword);
 // Cerrar sesión
 router.post("/logout", authMiddleware, logoutUser);
 
+// Actualizar
+router.put("/perfil", authMiddleware, updateUserProfile);
 
 export default router;

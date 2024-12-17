@@ -35,6 +35,18 @@ export const registerUser = async (req, res) => {
   }
 };
 
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.userId).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado." });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener el perfil del usuario." });
+  }
+};
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -94,3 +106,43 @@ export const logoutUser = (req, res) => {
   // Simplemente confirmar el cierre de sesión
   res.status(200).json({ message: "Sesión cerrada correctamente." });
 };
+
+
+export const updateUserProfile = async (req, res) => {
+  const { nombre, apellido, email } = req.body;
+
+  try {
+    // Buscar al usuario autenticado
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado." });
+    }
+
+    // Validar si el email ya existe en otro usuario
+    if (email && email !== user.email) {
+      const emailExists = await User.findOne({ email });
+      if (emailExists) {
+        return res.status(400).json({ message: "El correo ya está en uso." });
+      }
+    }
+
+    // Actualizar los campos permitidos
+    if (nombre) user.nombre = nombre;
+    if (apellido) user.apellido = apellido;
+    if (email) user.email = email;
+
+    // Guardar los cambios en la base de datos
+    const updatedUser = await user.save();
+
+    // Devolver los datos actualizados sin la contraseña
+    res.status(200).json({
+      _id: updatedUser._id,
+      nombre: updatedUser.nombre,
+      apellido: updatedUser.apellido,
+      email: updatedUser.email,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error al actualizar el perfil.", error: error.message });
+  }
+};
+ 

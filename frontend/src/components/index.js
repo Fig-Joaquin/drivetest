@@ -1,3 +1,3 @@
-export * from './MobileNav';
+export * from './NavBar/MobileNav';
 export * from './Banner';
-export * from './Nav';
+export * from './NavBar/Nav';

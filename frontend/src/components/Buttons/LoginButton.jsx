@@ -1,22 +1,28 @@
 import { useNavigate } from "react-router-dom";
+import PropTypes from 'prop-types';
 
-export const LoginButton = () => {
+export const LoginButton = ({classNameChildren2, handleLinkChildren2}) => {
   
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    navigate('/login');
+    navigate(`${handleLinkChildren2}`);
   }; 
 
   return (
       <button 
         onClick={handleLogin}
-        className="hidden sm:block group font-medium py-2 px-4 rounded-lg transition duration-200 text-sm sm:text-base sm:py-2 md:py-2 md:px-4">
+        className={`${classNameChildren2}`}>
       <span 
-        className="  group-hover:text-violet-200"
+        className="group-hover:text-purple-600"
         >Iniciar Sesión
         </span>
 
       </button>
   )
 }
+
+LoginButton.propTypes = {
+  classNameChildren2: PropTypes.string,
+  handleLinkChildren2: PropTypes.string,
+};

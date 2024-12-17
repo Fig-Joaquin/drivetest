@@ -1,7 +1,7 @@
 
 import { useNavigate } from "react-router-dom";
-import { MobileNav, Banner} from "../components";
 import { HeaderQuiz } from "../components/HeaderQuiz";
+import { MobileNav, Banner} from "../components/NavBar";
 
 
 export const HomePage = () => {
@@ -16,20 +16,30 @@ export const HomePage = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-purple-100">
       
       {/* Barra de Navegación para Móviles */}
-      <MobileNav />
+      <div className="block lg:hidden">
+        <MobileNav />
+      </div>
 
       {/* Barra de Navegación */}
       {/* // Header del Quiz */}
       
-      <HeaderQuiz 
-        showLoginButton={true} showHomeButton = {false}
-      />
+      <div className="hidden lg:block">
+        <HeaderQuiz
+          navClass={"text-2xl fixed top-0 z-50 left-0 font-extrabold text-center bg-violet text-purple-900 uppercase p-3 flex justify-between items-center w-full"}
+          showLoginButton={true}
+          showHomeButton={false}
+          classNameChildrenButton2={
+            "hidden sm:block group font-medium py-2 px-4 text-violet-900 rounded-lg transition duration-200 text-sm sm:text-base sm:py-2 md:py-2 md:px-4"
+          }
+          handleLinkChildrenButton2={"/login"}
+        />
+      </div>
       
       {/* Banner Principal */}
       <Banner />
       
       <div className="flex-grow flex items-center justify-center mb-20">
-        <button onClick={handleStartQuiz} className="bg-purple-700  text-white px-6 py-3 rounded-full text-lg hover:bg-purple-600 transition duration-200  animate-bounce ">
+        <button onClick={handleStartQuiz} className="bg-purple-800  text-white px-6 py-3 rounded-full text-lg hover:bg-purple-600 transition duration-200  animate-bounce ">
           Empezar Test
         </button>
       </div>

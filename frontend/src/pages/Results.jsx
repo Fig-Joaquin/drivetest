@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
-import { HeaderQuiz } from "./HeaderQuiz";
+import { HeaderQuiz } from "../components/HeaderQuiz";
+import { MobileNav } from "../components/NavBar";
 
 export const Results = ({
   showResults,
@@ -22,14 +23,29 @@ export const Results = ({
   const respuestasVisibles = respuestasIncorrectas.slice(inicio, fin);
 
   return (
-    <div className="min-h-screen flex flex-col mt-4 items-center bg-violet-50">
+    <div className="min-h-screen flex flex-col lg:mt-4 lg:items-center bg-violet-50">
 
-      {/* // Header del Quiz */}
-      <HeaderQuiz 
-        showLoginButton={true} 
-        showHomeButton = {true} 
-      />      
-      <div className="max-w-3xl w-full p-6 bg-violet shadow-lg rounded-lg mt-20">
+      <div className="block lg:hidden">
+          <MobileNav />
+        </div>
+  
+        {/* // Header del Quiz */}
+        <div className="hidden lg:block">
+          <HeaderQuiz 
+            navClass={"text-2xl fixed top-0 z-50 left-0 font-extrabold text-center bg-violet text-purple-900 uppercase p-3 flex justify-between items-center w-full"}
+            // Boton 1
+            showHomeButton = {true} 
+            classNameChildrenButton = {"hidden sm:block group text-violet-900  font-medium py-2 px-4 rounded-lg transition duration-200 text-sm sm:text-base sm:py-2 md:py-2 md:px-4"}
+            handleLinkChildrenButton = {"/"}
+            // Boton 2
+            showLoginButton = {true} 
+            classNameChildrenButton2 = {
+              "hidden sm:block group font-medium py-2 px-4 text-violet-900 rounded-lg transition duration-200 text-sm sm:text-base sm:py-2 md:py-2 md:px-4"
+            }
+            handleLinkChildrenButton2={"/login"}
+            />
+      </div>    
+      <div className="max-w-3xl w-full p-6 bg-violet shadow-lg rounded-lg lg:mt-20">
         <h2 className="text-2xl font-bold mb-4">Resultados del Test</h2>
         <p className="text-lg">
           Tu puntuación es: <strong>{score}/{totalQuestions}</strong>

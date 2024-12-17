@@ -2,8 +2,9 @@
 import { Routes, Route } from 'react-router-dom';
 import {HomePage} from './pages/HomePage';
 import {QuizPage} from './pages/QuizPage';
-import { Test } from './pages/test';
-import { LoginPage } from './pages/LoginPage';
+import { Test } from './pages/Test';
+import { LoginPage } from './pages/users/LoginPage';
+import { ProfilePage } from './pages/users/ProfilePage';
 
 export const App = () => {
   return (
@@ -12,6 +13,8 @@ export const App = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/quiz" element={<QuizPage />} />
       <Route path='/login' element={<LoginPage/>}/>
+      <Route path='/perfil' element={<ProfilePage/>}/>
     </Routes>
-  );
+  );  
 }
+    
