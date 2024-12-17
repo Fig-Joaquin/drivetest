@@ -40,7 +40,7 @@ app.use(express.json());
 // Rutas
 app.use('/api', preguntasRoutes);
 app.use('/auth', authRoutes);
-app.use("/usuarios", userRoutes);
+app.use("/users", userRoutes);
 
 // Definir __dirname manualmente
 const __filename = fileURLToPath(import.meta.url);

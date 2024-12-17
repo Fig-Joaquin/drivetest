@@ -110,7 +110,7 @@ export const QuizPage = () => {
 
       <div className="max-w-2xl w-full p-6 bg-white shadow-lg rounded-lg mt-10">
           <div className="text-lg text-center  font-medium"> Pregunta {currentQuestion+1} </div>
-        <h2 className="text-lg font-bold mb-4 mt-3">{preguntaActual.texto}</h2>
+        <h2 className="text-xl text-justify font-bold mb-4 mt-3">{preguntaActual.texto}</h2>
         
         <p className="mb-4 text-gray-700 italic">
           {preguntaActual.tipo_pregunta === "única"

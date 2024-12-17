@@ -59,3 +59,38 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: "Error al iniciar sesión.", error: error.message });
   }
 };
+
+
+export const changePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  try {
+    // Buscar al usuario autenticado
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado." });
+    }
+
+    // Verificar la contraseña actual
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "La contraseña actual es incorrecta." });
+    }
+
+    // Hashear la nueva contraseña
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Actualizar la contraseña en la base de datos
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Contraseña actualizada correctamente." });
+  } catch (error) {
+    res.status(500).json({ message: "Error al cambiar la contraseña." });
+  }
+};
+
+export const logoutUser = (req, res) => {
+  // Simplemente confirmar el cierre de sesión
+  res.status(200).json({ message: "Sesión cerrada correctamente." });
+};

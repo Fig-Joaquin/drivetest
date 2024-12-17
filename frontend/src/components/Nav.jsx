@@ -1,4 +1,4 @@
-import { LoginButton } from "./LoginButton"
+import { LoginButton } from "./Buttons/LoginButton"
 
 export const Nav = () => {
   return (
