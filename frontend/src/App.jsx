@@ -5,6 +5,7 @@ import {QuizPage} from './pages/QuizPage';
 import { Test } from './pages/Test';
 import { LoginPage } from './pages/users/LoginPage';
 import { ProfilePage } from './pages/users/ProfilePage';
+import { ProtectedRoute } from './components/ProtectedRoute';
 
 export const App = () => {
   return (
@@ -13,8 +14,14 @@ export const App = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/quiz" element={<QuizPage />} />
       <Route path='/login' element={<LoginPage/>}/>
-      <Route path='/perfil' element={<ProfilePage/>}/>
+      <Route 
+        path='/perfil' 
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        
+        }/>
     </Routes>
   );  
 }
-    

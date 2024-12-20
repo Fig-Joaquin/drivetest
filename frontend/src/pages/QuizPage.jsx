@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useFetchQuestions } from "../hooks/useFetchQuestions";
 import { Results } from "./Results";
 import { HeaderQuiz } from "../components/HeaderQuiz";
 import { MobileNav } from "../components/NavBar";
+import { AuthContext } from "../context/AuthContext";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -16,7 +17,7 @@ export const QuizPage = () => {
   const [showResults, setShowResults] = useState(false);
   const [detallesRespuestas, setDetallesRespuestas] = useState([]);
   const [paginaActual, setPaginaActual] = useState(0);
-  
+  const {authenticated}  = useContext(AuthContext); // Usar el contexto
 
 
 
@@ -115,10 +116,11 @@ export const QuizPage = () => {
           handleLinkChildrenButton = {"/"}
           // Boton 2
           showLoginButton = {true} 
+          textChildrenButton2={authenticated ? "Ver Perfil" : "Iniciar Sesión"}
           classNameChildrenButton2 = {
             "hidden sm:block group font-medium py-2 px-4 text-violet-900 rounded-lg transition duration-200 text-sm sm:text-base sm:py-2 md:py-2 md:px-4"
           }
-          handleLinkChildrenButton2={"/login"}
+          handleLinkChildrenButton2={authenticated ? "/perfil" : "/login"}
           />
       </div>
 

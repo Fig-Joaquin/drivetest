@@ -12,14 +12,14 @@ router.post("/register", validateSchema(registerUserSchema), registerUser);
 // Iniciar sesión
 router.post("/login", loginUser);
 
+// Cerrar sesión
+router.post("/logout", authMiddleware, logoutUser);
+
 // Perfil del usuario
 router.get("/perfil", authMiddleware, getUserProfile);
 
 // Cambio de contraseña del usario
 router.patch("/change-password", authMiddleware, changePassword);
-
-// Cerrar sesión
-router.post("/logout", authMiddleware, logoutUser);
 
 // Actualizar
 router.put("/perfil", authMiddleware, updateUserProfile);

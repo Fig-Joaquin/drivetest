@@ -9,6 +9,7 @@ export const HeaderQuiz = ({
   handleLinkChildrenButton,
   // Botón 2 loginButton
   classNameChildrenButton2, 
+  textChildrenButton2,
   handleLinkChildrenButton2, 
   showHomeButton = false, 
   showLoginButton = true 
@@ -37,6 +38,7 @@ export const HeaderQuiz = ({
             <LoginButton 
               classNameChildren2 = { classNameChildrenButton2 }
               handleLinkChildren2 = {handleLinkChildrenButton2 }
+              textChildren2={textChildrenButton2}
           />}
         </div>
       </nav>
@@ -50,6 +52,7 @@ HeaderQuiz.propTypes = {
   handleLinkChildrenButton: PropTypes.string,
   classNameChildrenButton2: PropTypes.string,
   handleLinkChildrenButton2: PropTypes.string,
+  textChildrenButton2: PropTypes.string,
   showHomeButton: PropTypes.bool,
   showLoginButton: PropTypes.bool,
 };

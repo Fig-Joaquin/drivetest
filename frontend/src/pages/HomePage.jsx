@@ -2,11 +2,15 @@
 import { useNavigate } from "react-router-dom";
 import { HeaderQuiz } from "../components/HeaderQuiz";
 import { MobileNav, Banner} from "../components/NavBar";
+import { AuthContext } from "../context/AuthContext";
+import { useContext } from "react";
 
 
 export const HomePage = () => {
 
   const navigate = useNavigate();
+
+  const { authenticated } = useContext(AuthContext); // Obtener estado de autenticación
 
   const handleStartQuiz = () => {
     navigate('/quiz');
@@ -26,12 +30,15 @@ export const HomePage = () => {
       <div className="hidden lg:block">
         <HeaderQuiz
           navClass={"text-2xl fixed top-0 z-50 left-0 font-extrabold text-center bg-violet text-purple-900 uppercase p-3 flex justify-between items-center w-full"}
-          showLoginButton={true}
+          // Boton 1
           showHomeButton={false}
+          // Boton2
+          showLoginButton={true}
           classNameChildrenButton2={
             "hidden sm:block group font-medium py-2 px-4 text-violet-900 rounded-lg transition duration-200 text-sm sm:text-base sm:py-2 md:py-2 md:px-4"
           }
-          handleLinkChildrenButton2={"/login"}
+          textChildrenButton2={authenticated ? "Ver Perfil" : "Iniciar Sesión"}
+          handleLinkChildrenButton2={authenticated ? "/perfil" : "/login"}
         />
       </div>
       

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
 
-export const LoginButton = ({classNameChildren2, handleLinkChildren2}) => {
+export const LoginButton = ({textChildren2, classNameChildren2, handleLinkChildren2}) => {
   
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ export const LoginButton = ({classNameChildren2, handleLinkChildren2}) => {
         className={`${classNameChildren2}`}>
       <span 
         className="group-hover:text-purple-600"
-        >Iniciar Sesión
+        >{textChildren2}
         </span>
 
       </button>
@@ -25,4 +25,5 @@ export const LoginButton = ({classNameChildren2, handleLinkChildren2}) => {
 LoginButton.propTypes = {
   classNameChildren2: PropTypes.string,
   handleLinkChildren2: PropTypes.string,
+  textChildren2: PropTypes.string,
 };

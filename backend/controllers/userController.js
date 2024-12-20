@@ -3,13 +3,17 @@ import bcrypt from "bcrypt";
 import User from "../models/User.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "mi_secreto_super_seguro";
+// * Registrar Usuario
 
 export const registerUser = async (req, res) => {
   const { nombre, apellido, email, password } = req.body;
 
   try {
+    // Convertir el correo a minúsculas
+    const normalizedEmail = email.toLowerCase();
+
     // Verificar si el usuario ya existe
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
       return res.status(400).json({ message: "El correo ya está registrado." });
     }
@@ -21,7 +25,7 @@ export const registerUser = async (req, res) => {
     const newUser = new User({
       nombre,
       apellido,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
     });
     await newUser.save();
@@ -35,7 +39,9 @@ export const registerUser = async (req, res) => {
   }
 };
 
+
 export const getUserProfile = async (req, res) => {
+  // * Obtener Perfil de Usuario
   try {
     const user = await User.findById(req.user.userId).select("-password");
     if (!user) {
@@ -47,55 +53,69 @@ export const getUserProfile = async (req, res) => {
     res.status(500).json({ message: "Error al obtener el perfil del usuario." });
   }
 };
+// * Iniciar Sesión
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
+  // Normalizar el correo a minúsculas
+  const normalizedEmail = email.toLowerCase();
+
   try {
-    const user = await User.findOne({ email });
+    // Buscar al usuario por email
+    const user = await User.findOne({ email: normalizedEmail });
     if (!user) {
-      return res.status(400).json({ message: "Credenciales inválidas." });
+      res.status(401).json({ message: "El correo o la contraseña son incorrectos." });
     }
 
     // Validar la contraseña
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(400).json({ message: "Credenciales inválidas." });
+      return res.status(400).json({ message: "Contraseña incorrecta" });
     }
 
     // Generar el token JWT
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: "1h" });
 
-    res.status(200).json({ token });
+    // Configurar la cookie
+    res.cookie("token", token, {
+      httpOnly: true, // No accesible desde JavaScript
+      secure: process.env.NODE_ENV === "production", // Solo HTTPS en producción
+      sameSite: "Strict", // Previene ataques CSRF
+      maxAge: 3600000, // 1 hora
+    });
+
+    // Responder con éxito
+    res.status(200).json({ message: "Inicio de sesión exitoso" });
   } catch (error) {
     res.status(500).json({ message: "Error al iniciar sesión.", error: error.message });
   }
 };
 
-
+// * Cambiar Contraseña
 export const changePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
-
+  
   try {
     // Buscar al usuario autenticado
     const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado." });
     }
-
+    
     // Verificar la contraseña actual
     const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "La contraseña actual es incorrecta." });
     }
-
+    
     // Hashear la nueva contraseña
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-
+    
     // Actualizar la contraseña en la base de datos
     user.password = hashedPassword;
     await user.save();
-
+    
     res.status(200).json({ message: "Contraseña actualizada correctamente." });
   } catch (error) {
     res.status(500).json({ message: "Error al cambiar la contraseña." });
@@ -103,11 +123,12 @@ export const changePassword = async (req, res) => {
 };
 
 export const logoutUser = (req, res) => {
-  // Simplemente confirmar el cierre de sesión
+  res.clearCookie("token"); // Elimina la cookie del token
   res.status(200).json({ message: "Sesión cerrada correctamente." });
 };
 
 
+// * Actualizar Perfil de Usuario
 export const updateUserProfile = async (req, res) => {
   const { nombre, apellido, email } = req.body;
 
@@ -125,7 +146,7 @@ export const updateUserProfile = async (req, res) => {
         return res.status(400).json({ message: "El correo ya está en uso." });
       }
     }
-
+    
     // Actualizar los campos permitidos
     if (nombre) user.nombre = nombre;
     if (apellido) user.apellido = apellido;
@@ -145,4 +166,4 @@ export const updateUserProfile = async (req, res) => {
     res.status(500).json({ message: "Error al actualizar el perfil.", error: error.message });
   }
 };
- 
+

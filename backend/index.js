@@ -9,6 +9,7 @@ import userRoutes from "./routes/userRoutes.js";
 import cors from 'cors'; // Importa cors
 import path from "path";
 import { fileURLToPath } from "url";
+import cookieParser from "cookie-parser";
 
 
 const app = express(); // crea una instancia con la conexión express
@@ -17,7 +18,6 @@ connectDB(); // ejecuta la conexión a la base de datos
 
 console.log(process.env.MONGO_URI);
 
-
 // Middleware para habilitar CORS
 app.use(cors({
   origin:  `http://${process.env.WEB_URL}:5173 ` , // Cambia esto al origen de tu frontend
@@ -25,6 +25,8 @@ app.use(cors({
   credentials: true
 }));
 
+// Middleware para manejar cookies
+app.use(cookieParser());
 
 // Middleware para sesiones
 app.use(
@@ -35,6 +37,7 @@ app.use(
   })
 );
 
+// Middleware para parsear JSON
 app.use(express.json());
 
 // Rutas
