@@ -11,11 +11,17 @@ export const useAuth = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const valid = await isAuthenticated();
-      setAuthenticated(valid);
-      setLoading(false);
+      try {
+        const valid = await isAuthenticated();
+        setAuthenticated(valid);
+      } catch (error) {
+        console.error("Error verificando autenticación:", error);
+        setAuthenticated(false); // En caso de error, desautenticar al usuario
+      } finally {
+        setLoading(false); // Asegurarse de que el estado de carga siempre se detenga
+      }
     };
-
+  
     checkAuth();
   }, []);
 

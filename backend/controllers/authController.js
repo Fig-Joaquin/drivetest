@@ -2,20 +2,23 @@ import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "mi_secreto_super_seguro";
 
-// Validar el token
+/**
+ * Valida el token JWT desde las cookies.
+ */
 export const validateToken = (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1]; // Extraer token del header
+  // Extraer el token de las cookies
+  const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ message: "Token no proporcionado." });
+    return res.status(401).json({ message: "No se encontró el token en las cookies." });
   }
 
   try {
     // Verificar el token
     const decoded = jwt.verify(token, JWT_SECRET);
 
-    // Si es válido, enviar una respuesta positiva
-    res.status(200).json({ valid: true, userId: decoded.userId });
+    // Respuesta positiva si el token es válido
+    res.status(200).json({ authenticated: true, userId: decoded.userId });
   } catch (error) {
     // Token inválido o expirado
     res.status(401).json({ message: "Token inválido o expirado." });

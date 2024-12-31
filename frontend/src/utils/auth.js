@@ -1,30 +1,27 @@
-const API_URL = import.meta.env.VITE_API_URL; // URL del backend
+import api from "../utils/axiosConfig";
+let cachedAuth = null;
 
-/**
- * Verifica si el token de usuario es válido.
- * @returns {Promise<boolean>} Retorna `true` si el token es válido, de lo contrario `false`.
- */
+let authPromise = null;
 
 export const isAuthenticated = async () => {
-  const token = localStorage.getItem("token");
-  if (!token) return false;
+  if (cachedAuth !== null) return cachedAuth;
 
-  try {
-    const response = await fetch(`${API_URL}/auth/validate-token`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+  if (authPromise) {
+    return authPromise;
+  }
+
+  authPromise = api.get("/auth/validate-token")
+    .then((response) => {
+      cachedAuth = response.data.authenticated;
+      authPromise = null; // Reset la promesa una vez completada
+      return cachedAuth;
+    })
+    .catch((error) => {
+      console.error("Error verificando autenticación:", error);
+      cachedAuth = false;
+      authPromise = null;
+      return false;
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      return data.valid; // Retorna `true` si el token es válido
-    }
-
-    return false;
-  } catch (error) {
-    console.error("Error validando el token:", error);
-    return false;
-  }
+  return authPromise;
 };

@@ -18,7 +18,7 @@ const isValidDomain = (email) => {
   });
 };
 
-
+// Register userSchema
 export const registerUserSchema = z.object({
   nombre: z
     .string()
@@ -40,3 +40,23 @@ export const registerUserSchema = z.object({
     .min(6, "La contraseña debe tener al menos 6 caracteres")
     .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/, "La contraseña debe incluir al menos una letra, un número y un carácter especial"),
   });
+
+
+// EditProfile userSchema
+  export const editUserProfileSchema = z.object({
+    nombre: z
+      .string()
+      .min(3, "El nombre es obligatorio")
+      .trim()
+      .regex(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/, "El nombre solo puede contener letras y espacios"),
+    apellido: z
+      .string()
+      .min(3, "El apellido es obligatorio")
+      .trim()
+      .regex(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/, "El apellido solo puede contener letras y espacios"),
+    email: z
+      .string()
+      .email("Debe ser un correo válido")
+      .trim(),
+  });
+  

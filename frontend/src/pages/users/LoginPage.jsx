@@ -40,9 +40,12 @@ export const LoginPage = () => {
     }
   };
 
+  const handleRegister = () => {
+    navigate("/registro");
+  }
   return (
-    <div className="lg:flex lg:items-center lg:justify-center h-screen bg-gradient-to-b from-white to-purple-100">
-      <div className="block lg:hidden">
+    <div className="h-screen flex flex-col bg-gradient-to-b from-white to-purple-100">
+      <div className="lg:hidden">
         <MobileNav />
       </div>
       <div className="hidden lg:block">
@@ -54,23 +57,50 @@ export const LoginPage = () => {
           showLoginButton={false}
         />
       </div>
-      <div className="w-full max-w-md p-8 rounded-3xl shadow-2xl bg-gradient-to-tl from-violet-50 to-purple-1000">
-        <h2 className="text-2xl text-violet-950 font-extralight text-center mb-6">Iniciar Sesión</h2>
-        {error && <div className="mb-4 text-red-500 text-sm text-center">{error}</div>}
-        <form autoComplete="on" onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-violet-950">Correo Electrónico</label>
-            <input type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full mt-1 p-2 border rounded focus:outline-none border-violet-50 focus:border-violet-100" placeholder="correo@hotmail.com" autoComplete="email" required />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-violet-950">Contraseña</label>
-            <input type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full mt-1 p-2 border rounded focus:outline-none border-violet-50 focus:border-violet-100" placeholder="*********" autoComplete="current-password" required />
-          </div>
-          <div className="flex items-center justify-center">
-            <button type="submit" className="text-violet-800 w-full font-sans py-2 rounded-lg transition hover:bg-violet-100 hover:text-violet-500 hover:shadow-lg active:bg-violet-200 active:text-white active:scale-95">Iniciar Sesión</button>
-          </div>
-          <CustomButton text="Registrarme" type="button" classNameChildren="text-violet-800 font-sans py-2 rounded-lg transition hover:bg-violet-100 hover:text-violet-500 hover:shadow-lg active:bg-violet-200 active:text-white active:scale-95 items-center w-full px-3 py-1 rounded-lg border-violet-50 transition" />
-        </form>
+      <div 
+        className="flex-grow flex items-center justify-center">
+        <div 
+          className="w-full  lg:max-w-md  md:max-w-md   p-8 rounded-3xl shadow-2xl bg-gradient-to-tl from-violet-50 to-purple-1000 ">
+          <h2 
+            className="text-2xl text-violet-950 font-extralight text-center mb-6">
+              Iniciar Sesión
+          </h2>
+          {error && <div className="mb-4 text-red-500 text-sm text-center">{error}</div>}
+          <form 
+            autoComplete="on" onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label
+                htmlFor="email" className="block text-sm font-medium text-violet-950">
+                  Correo Electrónico
+              </label>
+              <input 
+                type="email" id="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} 
+                className="w-full mt-1 p-2 border rounded focus:outline-none border-violet-50 focus:border-violet-100"
+                placeholder="correo@hotmail.com" 
+                autoComplete="email" required />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="password" className="block text-sm font-medium text-violet-950">
+                Contraseña
+              </label>
+              <input 
+                type="password" id="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)}
+                className="w-full mt-1 p-2 border rounded focus:outline-none border-violet-50 focus:border-violet-100"
+                placeholder="*********" autoComplete="current-password" required />
+            </div>
+            <div className="flex items-center justify-center">
+              <button 
+                type="submit" 
+                className="text-violet-800 w-full font-sans py-2 rounded-lg transition hover:bg-violet-100 hover:text-violet-500 hover:shadow-lg active:bg-violet-200 active:text-white active:scale-95">Iniciar Sesión
+              </button>
+            </div>
+            <CustomButton 
+              text="Registrarme" 
+              type="button"
+              onClick={handleRegister}
+              classNameChildren="text-violet-800 font-sans py-2 rounded-lg transition hover:bg-violet-100 hover:text-violet-500 hover:shadow-lg active:bg-violet-200 active:text-white active:scale-95 items-center w-full px-3 py-1 rounded-lg border-violet-50 transition" />
+          </form>
+        </div>
       </div>
     </div>
   );

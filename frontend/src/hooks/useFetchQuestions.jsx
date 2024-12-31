@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import propTypes from "prop-types";
+import api from "../utils/axiosConfig"; // Importa tu instancia de axios
 
 export const useFetchQuestions = (url) => {
   const [preguntas, setPreguntas] = useState([]);
@@ -10,12 +10,21 @@ export const useFetchQuestions = (url) => {
   useEffect(() => {
     const fetchPreguntas = async () => {
       try {
-        const response = await axios.get(url);
-        setPreguntas(response.data.preguntas || []); // Asegurar que preguntas sea un array
-        setLoading(false);
+        const response = await api.get(url);
+        setPreguntas(response.data.preguntas || []);
       } catch (err) {
-        setError(err.message);
-        setLoading(false);
+        if (err.response) {
+          // Respuesta del servidor con un error (4xx o 5xx)
+          setError(err.response.data.message || "Error al cargar preguntas.");
+        } else if (err.request) {
+          // El servidor no respondió
+          setError("No se pudo conectar con el servidor. Verifica tu conexión.");
+        } else {
+          // Otros errores
+          setError("Ocurrió un error desconocido.");
+        }
+      } finally {
+        setLoading(false); // Finaliza la carga
       }
     };
 
@@ -23,10 +32,4 @@ export const useFetchQuestions = (url) => {
   }, [url]);
 
   return { preguntas, loading, error };
-};
-
-
-// Validar que el hook reciba una URL válida como prop
-useFetchQuestions.propTypes = {
-  url: propTypes.string.isRequired,
 };

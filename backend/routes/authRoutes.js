@@ -6,7 +6,7 @@ import { validateToken } from "../controllers/authController.js";
 const router = express.Router();
 
 // Endpoint para validar el token
-router.post("/validate-token", validateToken);
+router.get("/validate-token", validateToken);
 
 // Ruta para iniciar sesión con Google
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));

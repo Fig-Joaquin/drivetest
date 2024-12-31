@@ -1,27 +1,39 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-
 import navImage from "../../images/NavBarWhite.png";
-import { useLogout } from "../../utils/useLogout"; // Tu hook para cerrar sesión
+import { useLogout } from "../../utils/useLogout";
+import { AuthContext } from "../../context/AuthContext";
+import { fetchUserProfile } from "../../services/userServices";
+import { useNavigate } from "react-router-dom";
+import profileImage from "../../images/profilePicture.png";
 
 export const MobileNav = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado para el token
-  const handleLogout = useLogout(); // Hook para cerrar sesión
+  const { authenticated } = useContext(AuthContext); // Consumiendo el estado global del contexto
+  const {handleLogout} = useLogout();
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
-  // Verificar si hay token en localStorage
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token); // Actualiza isLoggedIn si hay token
-  }, []);
+    const loadUserProfile = async () => {
+      try {
+        const userData = await fetchUserProfile();
+        setUser(userData);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    loadUserProfile();
+  }, [navigate]);
 
+  // Generar navegación dinámica
   const navigation = [
     { name: "Inicio", href: "/" },
     { name: "Comenzar Test", href: "/quiz" },
-    isLoggedIn && { name: "Perfil", href: "/perfil" }, // Solo si hay token
-    !isLoggedIn && { name: "Iniciar Sesión", href: "/login" }, // Solo si no hay token
-  ].filter(Boolean); // Filtra elementos nulos o falsos
+    authenticated && { name: "Perfil", href: "/perfil" },
+    !authenticated && { name: "Iniciar Sesión", href: "/login" },
+  ].filter(Boolean); // Filtra elementos nulos
 
   return (
     <header className="bg-white shadow-md">
@@ -62,6 +74,20 @@ export const MobileNav = () => {
             </button>
           </div>
 
+          <div className="mt-6 items-center justify-center flex">
+            {user && (
+              <div className="flex flex-col items-center">
+                <img
+                  src={profileImage}
+                  alt="Foto de perfil"
+                  className="w-16 h-16 rounded-full shadow-lg border-4 border-purple-300"
+                />
+                <h1 className="text-lg font-bold text-purple-700 mt-2">{`${user.nombre} ${user.apellido}`}</h1>
+                <p className="text-gray-600 text-sm">{user.email}</p>
+              </div>
+            )}
+          </div>
+
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-200">
               <div className="space-y-2 py-6">
@@ -75,12 +101,11 @@ export const MobileNav = () => {
                   </a>
                 ))}
               </div>
-
               {/* Botón de cerrar sesión */}
-              {isLoggedIn && (
+              {authenticated && (
                 <div className="py-6">
                   <button
-                    onClick={handleLogout}
+                    onClick={() => handleLogout()}
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold text-gray-900 hover:bg-gray-50"
                   >
                     Cerrar Sesión

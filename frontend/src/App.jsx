@@ -6,6 +6,8 @@ import { Test } from './pages/Test';
 import { LoginPage } from './pages/users/LoginPage';
 import { ProfilePage } from './pages/users/ProfilePage';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { EditProfilePage } from './pages/users/EditProfilePage';
+import { RegisterPage } from './pages/users/RegisterPage';
 
 export const App = () => {
   return (
@@ -22,6 +24,16 @@ export const App = () => {
           </ProtectedRoute>
         
         }/>
+        <Route
+          path='/editar-perfil' 
+          element={
+            <ProtectedRoute>
+            <EditProfilePage/>
+            </ProtectedRoute>
+          }/>
+
+      <Route path='/registro' element={<RegisterPage/>}/>
+      <Route path='*' element={<h1>Not Found</h1>}/>
     </Routes>
   );  
 }

@@ -1,10 +1,11 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
-
+import { editUserProfileSchema } from "../schemas/userSchema.js";
+import { z } from "zod";
 const JWT_SECRET = process.env.JWT_SECRET || "mi_secreto_super_seguro";
-// * Registrar Usuario
 
+// * Registrar Usuario
 export const registerUser = async (req, res) => {
   const { nombre, apellido, email, password } = req.body;
 
@@ -40,8 +41,8 @@ export const registerUser = async (req, res) => {
 };
 
 
+// * Obtener Perfil de Usuario
 export const getUserProfile = async (req, res) => {
-  // * Obtener Perfil de Usuario
   try {
     const user = await User.findById(req.user.userId).select("-password");
     if (!user) {
@@ -82,7 +83,7 @@ export const loginUser = async (req, res) => {
       httpOnly: true, // No accesible desde JavaScript
       secure: process.env.NODE_ENV === "production", // Solo HTTPS en producción
       sameSite: "Strict", // Previene ataques CSRF
-      maxAge: 3600000, // 1 hora
+      maxAge: 86400000, // 1 Día de duración
     });
 
     // Responder con éxito
@@ -122,6 +123,7 @@ export const changePassword = async (req, res) => {
   }
 };
 
+// * Cerrar Sesión
 export const logoutUser = (req, res) => {
   res.clearCookie("token"); // Elimina la cookie del token
   res.status(200).json({ message: "Sesión cerrada correctamente." });
@@ -130,27 +132,28 @@ export const logoutUser = (req, res) => {
 
 // * Actualizar Perfil de Usuario
 export const updateUserProfile = async (req, res) => {
-  const { nombre, apellido, email } = req.body;
 
   try {
+     // Validar los datos enviados con Zod
+    const validatedData = editUserProfileSchema.parse(req.body);
+    console.log(validatedData);
     // Buscar al usuario autenticado
     const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado." });
     }
 
-    // Validar si el email ya existe en otro usuario
-    if (email && email !== user.email) {
-      const emailExists = await User.findOne({ email });
+    if (validatedData.email && validatedData.email !== user.email) {
+      const emailExists = await User.findOne({ email: validatedData.email });
       if (emailExists) {
         return res.status(400).json({ message: "El correo ya está en uso." });
       }
     }
-    
-    // Actualizar los campos permitidos
-    if (nombre) user.nombre = nombre;
-    if (apellido) user.apellido = apellido;
-    if (email) user.email = email;
+
+    // Actualizar los campos permitidos 
+    user.nombre = validatedData.nombre;
+    user.apellido = validatedData.apellido;
+    user.email = validatedData.email;
 
     // Guardar los cambios en la base de datos
     const updatedUser = await user.save();
@@ -163,7 +166,11 @@ export const updateUserProfile = async (req, res) => {
       email: updatedUser.email,
     });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return res.status(400).json({ message: "Error de validación.", errors: error.errors });
+    }
     res.status(500).json({ message: "Error al actualizar el perfil.", error: error.message });
   }
 };
+
 

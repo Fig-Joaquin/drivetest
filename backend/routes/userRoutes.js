@@ -7,7 +7,7 @@ import { authMiddleware } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 // Registrar un usuario
-router.post("/register", validateSchema(registerUserSchema), registerUser);
+router.post("/registro", validateSchema(registerUserSchema), registerUser);
 
 // Iniciar sesión
 router.post("/login", loginUser);
@@ -19,9 +19,9 @@ router.post("/logout", authMiddleware, logoutUser);
 router.get("/perfil", authMiddleware, getUserProfile);
 
 // Cambio de contraseña del usario
-router.patch("/change-password", authMiddleware, changePassword);
+router.patch("/cambio-password", authMiddleware, changePassword);
 
 // Actualizar
-router.put("/perfil", authMiddleware, updateUserProfile);
+router.put("/editar-perfil", authMiddleware, updateUserProfile);
 
 export default router;

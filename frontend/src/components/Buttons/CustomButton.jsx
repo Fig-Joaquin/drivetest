@@ -23,7 +23,7 @@ export const CustomButton = ({ classSpan, classNameChildren, onClick, text, type
 };
 
 CustomButton.propTypes = {
-  onClick: PropTypes.func,
+  onClick: PropTypes.func.isRequired,
   text: PropTypes.node.isRequired,
   type: PropTypes.oneOf(["button", "submit", "reset"]),
   variant: PropTypes.oneOf(["primary", "secondary", "danger"]),
