@@ -1,0 +1,104 @@
+// * múltiple o única
+
+// ? EJEMPLO 
+
+{
+  "texto": "En un automóvil, ¿Cuál de los siguientes elementos reduce el riesgo de lesiones de cuello en una colisión?",
+  "tipo_pregunta": "única",
+  "alternativas": [
+    {
+      "id": "a",
+      "texto": "Un asiento dotado de air-bag (bolsa de aire)."
+    },
+    {
+      "id": "b",
+      "texto": "Los frenos ABS."
+    },
+    {
+      "id": "c",
+      "texto": "Una columna de dirección colapsable."
+    },
+    {
+      "id": "d",
+      "texto": "Un asiento con apoya-cabeza ajustado en forma apropiada.",
+      "correccion": "El apoya-cabeza es un elemento clave para reducir el riesgo de lesiones cervicales, especialmente en colisiones traseras. Cuando está ajustado correctamente (a la altura de la parte superior de la cabeza y cercano a la misma), limita el movimiento hacia atrás de la cabeza, protegiendo el cuello de hiperextensiones que pueden causar el latigazo cervical."
+    }
+  ],
+  "respuestas_correctas": ["d"]
+}
+
+
+{
+  "texto": "Es esencial que la presión de los neumáticos sea chequeada regularmente. ¿Cuándo se debe hacer esto?",
+  "tipo_pregunta": "única",
+  "alternativas": [
+    {
+      "id": "a",
+      "texto": "Después de un viaje largo. "
+    },
+    {
+      "id": "b",
+      "texto": "Después de conducir a alta velocidad."
+    },
+    {
+      "id": "c",
+      "texto": "Cuando los neumáticos están fríos. ",
+      "correccion": " Chequear los neumáticos cuando están fríos permite una lectura más precisa"
+    },
+    {
+      "id": "d",
+      "texto": "Cuando los neumáticos están calientes.",
+    }
+  ],
+  "respuestas_correctas": ["c"]
+}
+
+
+{
+  "texto": "La presión de los neumáticos debe revisarse:",
+  "tipo_pregunta": "única",
+  "alternativas": [
+    {
+      "id": "a",
+      "texto": "Cuando los neumáticos están fríos."
+    },
+    {
+      "id": "b",
+      "texto": "Cuando los neumáticos están calientes. "
+    },
+    {
+      "id": "c",
+      "texto": "En cualquier momento, porque da igual que los neumáticos estén fríos o calientes. "
+    }
+    
+  ],
+  "respuestas_correctas": ["a"]
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

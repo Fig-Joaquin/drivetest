@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { toast } from "react-toastify";
+
 import api from "../utils/axiosConfig"; // Axios configurado para manejar cookies
 
 export const useLogout = () => {
@@ -16,11 +18,12 @@ export const useLogout = () => {
 
       // Actualiza el estado global a "no autenticado"
       setAuthenticated(false);
-
+      // Muestra la modificación.
+      toast.success("Sesión cerrada con éxito.", { position: "top-center" });
       // Redirige al inicio o a otra página deseada
       navigate("/");
     } catch (error) {
-      console.error("Error cerrando sesión:", error);
+      toast.error("Error al cerrar sesión.", { position: "top-center" });
     } finally {
       setLoading(false); // Finalizar el estado de carga
     }

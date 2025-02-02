@@ -98,9 +98,13 @@ export const EditProfilePage = () => {
   return (
     <div className="min-h-screen flex flex-col md:items-center md:p-24 bg-gradient-to-b from-white to-purple-100">
       <ToastContainer />
+      
+      {/* Nav bar de movil */}
       <div className="block md:hidden items-center justify-between md:justify-center">  
         <MobileNav/>
       </div>
+
+    {/* Menú para dispositivos con pantalla menor a MD */}
       <div className="hidden md:block">
               <HeaderQuiz
                 navClass="text-2xl fixed top-0 z-50 left-0 font-extrabold text-center bg-violet text-purple-900 uppercase p-3 flex justify-between items-center w-full"
@@ -109,7 +113,9 @@ export const EditProfilePage = () => {
                 classNameChildrenButton="hidden sm:block group font-medium py-2 px-4 text-violet-900 rounded-lg transition duration-200 text-sm sm:text-base sm:py-2 md:py-2 md:px-4"
                 handleLinkChildrenButton="/"
               />
-            </div>
+      </div>
+
+      {/* Menú para pc y tabletas */}
       <div className="hidden lg:block">
         <HeaderQuiz
           navClass={"text-2xl fixed top-0 z-50 left-0 font-extrabold text-center bg-violet text-purple-900 uppercase p-3 flex justify-between items-center w-full"}
@@ -122,7 +128,8 @@ export const EditProfilePage = () => {
           handleLinkChildrenButton={"/"}
         />
       </div>
-      <div className="w-full max-w-md p-8  lg:mt-10 rounded-3xl shadow-2xl bg-white">
+      
+      <div className="w-full lg:max-w-md p-8 mt-10 rounded-3xl shadow-2xl bg-white">
         <h2 className="text-2xl text-violet-900 font-semibold text-center mb-6">Editar Perfil</h2>
         <form autoComplete="off" onSubmit={handleSubmit}>
           <div className="mb-4">

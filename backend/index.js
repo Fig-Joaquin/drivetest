@@ -16,7 +16,6 @@ const app = express(); // crea una instancia con la conexión express
 dotenv.config(); // ejecuta dotenv
 connectDB(); // ejecuta la conexión a la base de datos
 
-console.log(process.env.MONGO_URI);
 
 // Middleware para habilitar CORS
 app.use(cors({

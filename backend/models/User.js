@@ -9,10 +9,12 @@ const userSchema = new mongoose.Schema({
   nombre: {
     type: String,
     required: function () { return !this.googleId; }, // Obligatorio para usuarios no autenticados por Google
+    maxlength: 50,
   },
   apellido: {
     type: String,
     required: function () { return !this.googleId; },
+    maxlength: 50,
   },
   email: {
     type: String,

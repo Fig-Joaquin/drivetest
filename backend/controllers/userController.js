@@ -18,7 +18,12 @@ export const registerUser = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: "El correo ya está registrado." });
     }
-
+    
+    if (password.length < 6 || password.length > 20) {
+      return res.status(400).json({
+        message: "La contraseña debe tener entre 6 y 20 caracteres.",
+      });
+    }
     // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -29,6 +34,7 @@ export const registerUser = async (req, res) => {
       email: normalizedEmail,
       password: hashedPassword,
     });
+
     await newUser.save();
 
     // Generar un token JWT
@@ -36,7 +42,8 @@ export const registerUser = async (req, res) => {
 
     res.status(201).json({ token });
   } catch (error) {
-    res.status(500).json({ message: "Error al registrar el usuario.", error: error.message });
+    console.error("Error al registrar usuario:", error);
+    res.status(500).json({ message: "Error interno del servidor." });
   }
 };
 

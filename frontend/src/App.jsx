@@ -8,9 +8,12 @@ import { ProfilePage } from './pages/users/ProfilePage';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { EditProfilePage } from './pages/users/EditProfilePage';
 import { RegisterPage } from './pages/users/RegisterPage';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const App = () => {
   return (
+    <>
     <Routes>
       <Route path='/test' element={<Test/>}/>
       <Route path="/" element={<HomePage />} />
@@ -31,9 +34,10 @@ export const App = () => {
             <EditProfilePage/>
             </ProtectedRoute>
           }/>
-
       <Route path='/registro' element={<RegisterPage/>}/>
       <Route path='*' element={<h1>Not Found</h1>}/>
-    </Routes>
+    </Routes>  
+    <ToastContainer /> 
+    </>
   );  
 }

@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HeaderQuiz } from "../../components/HeaderQuiz";
 import { MobileNav } from "../../components/NavBar";
+import { toast } from "react-toastify";
 
+import axios from "axios";
 const API_URL = import.meta.env.VITE_API_URL;
 
 export const RegisterPage = () => {
@@ -25,25 +27,17 @@ export const RegisterPage = () => {
     e.preventDefault();
     setError("");
     setSuccess("");
-
+  
     try {
-      const response = await fetch(`${API_URL}/users/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      const response = await axios.post(`${API_URL}/users/registro`, formData);
+      toast.success("Registro exitoso. Redirigiendo al inicio de sesión...", {
+        position: "top-center",
       });
-
-      if (!response.ok) {
-        const { message } = await response.json();
-        throw new Error(message || "Error al registrar usuario");
-      }
-
-      setSuccess("Registro exitoso. Redirigiendo al inicio de sesión...");
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      setError(err.message);
+      const errorMessage =
+        err.response?.data?.message || "Error al registrar usuario.";
+      toast.error(errorMessage, { position: "top-center" });
     }
   };
 
@@ -139,6 +133,7 @@ export const RegisterPage = () => {
             </div>
             <button
               type="submit"
+              onClick={handleSubmit}
               className="text-violet-800 w-full font-sans py-2 rounded-lg transition hover:bg-violet-100 hover:text-violet-500 hover:shadow-lg active:bg-violet-200 active:text-white active:scale-95"
             >
               Registrarme
